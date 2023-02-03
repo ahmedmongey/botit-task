@@ -4,7 +4,10 @@ pipeline {
 
    stages {
    
-     stage('Install Dependencies') { 
+     stage('Install Dependencies') {
+        when {
+            branch 'development'
+        } 
         steps { 
            sh 'sudo yum install python3 pip3' 
            sh 'sudo pip3 install virtualenv '
@@ -16,12 +19,18 @@ pipeline {
      }
      
      stage('Test') { 
+        when {
+            branch 'development'
+        }
         steps { 
            sh 'python ./tests/test_hello.py'
         }
       }
 
-         stage("Deploy application") { 
+         stage("Deploy application") {
+            when {
+                branch 'deployment'
+            } 
          steps { 
            sh 'python ./src/hello.py'
            sh 'sudo docker pull ahmedmongey/botit-image:v6'
