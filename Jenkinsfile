@@ -1,31 +1,39 @@
 pipeline {
-environment {
-registry = "ahmedmongey/botit-image:v6"
-registryCredential = 'DockerHub'
-dockerImage = ''
-}
-agent any
-stages {
-stage('Cloning our Git') {
-steps {
-git 'https://github.com/ahmedmongey/botit-task.git'
-}
-}
-stage('Building our image') {
-steps{
-script {
-dockerImage = docker.build registry + ":$BUILD_NUMBER"
-}
-}
-}
-stage('Deploy our image') {
-steps{
-script {
-docker.withRegistry( '', registryCredential ) {
-dockerImage.push()
-}
-}
-}
-}
-}
+
+    agent any
+
+    stages{
+        stage('Build') {
+          steps {
+            script {
+              withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) { 
+
+              sh """
+                docker build .  -t ahmedmongey/botit-image:V${BUILD_NUMBER}
+                echo ${BUILD_NUMBER}
+                docker login -u ${USERNAME} -p ${PASSWORD}
+                docker push ahmedmongey/botit-image:V${BUILD_NUMBER}
+                echo ${BUILD_NUMBER} > ../build_num.txt
+                """
+                    }
+                        } 
+                }
+            }
+    
+
+        stage('Deploy') {
+          steps{
+            script {
+
+                            sh """
+
+                              docker run -d -p 5000:5000 --name task omarkorety/botit:V${BUILD_NUMBER}
+                            """
+                }
+
+              }
+            
+          }
+        }
+
 }
