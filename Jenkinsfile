@@ -6,7 +6,7 @@ pipeline {
         stage('Build') {
           steps {
             script {
-              withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) { 
+              withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) { 
 
               sh """
                 docker build .  -t ahmedmongey/botit-image:V${BUILD_NUMBER}
