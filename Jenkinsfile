@@ -26,7 +26,7 @@ pipeline {
             script {
 
                             sh """
-                              docker run -d -p 5000:5000 --name my-container ahmedmongey/botit-image:V${BUILD_NUMBER}
+                              docker run -d -p 5000:5000 --name my-new-container ahmedmongey/botit-image:V${BUILD_NUMBER}
                             """
                 }
 
