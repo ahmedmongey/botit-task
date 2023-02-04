@@ -9,7 +9,7 @@ pipeline {
               withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) { 
 
               sh """
-                sudo systemctl start docker
+                systemctl start docker
                 docker build -t ahmedmongey/botit-image:V${BUILD_NUMBER} .
                 echo ${BUILD_NUMBER}
                 docker login -u ${USERNAME} -p ${PASSWORD}
@@ -27,7 +27,7 @@ pipeline {
             script {
 
                             sh """
-                              sudo systemctl start docker
+                              systemctl start docker
                               docker run -d -p 5000:5000 --name task omarkorety/botit:V${BUILD_NUMBER}
                             """
                 }
